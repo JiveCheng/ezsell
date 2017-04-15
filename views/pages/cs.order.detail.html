@@ -1,0 +1,223 @@
+<div class="wrapper-md" ng-init="interface.search.start()">
+	<div class="row">
+		<div class="col-md-8">
+			<div class="row">
+				<div class="col-md-12">
+					<h4>訂單摘要</h4>
+					<table class="table table-bordered bg-light lter">
+						<tbody>
+							<tr>
+								<th class="w-sm">訂單序號</th><td>{{order.summary.orderID}}</td>
+							</tr>
+							<tr>
+								<th>訂單金額</th><td>{{order.summary.orderAmounts | currency:"$ ":0}}</td>
+							</tr>
+							<tr>
+								<th>訂購時間</th><td>{{order.summary.orderDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+							</tr>
+							<tr>
+								<th>訂單狀態</th><td>{{order.summary.orderStatus | statuFilter: interface.orderStatusData}}</td>
+							</tr>
+							<tr>
+								<th>付費方式</th><td>{{order.summary.orderPayment}}</td>
+							</tr>
+							<tr>
+								<th>出貨時間</th><td>{{order.summary.shippingTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+							</tr>
+							<tr>
+								<th>包裹追蹤編號</th>
+								<td>
+									<input class="form-control" ng-model="order.summary.shipTrackingNumber">
+								</td>
+							</tr>
+							<tr>
+								<th>完成配送時間</th><td>{{order.summary.shipArrivalResTime}}</td>
+							</tr>
+							<tr>
+								<th>訂購人備註</th><td>{{order.summary.orderNotice || '無'}}</td>
+							</tr>
+							<tr>
+								<th>內部備註</th>
+								<td class="text-left">
+									<textarea placeholder="輸入您的內部備註" rows="3" class="form-control m-b-xs" ng-model="order.summary.orderInternalNotice"></textarea>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<button ng-click="interface.orderUpdate()" class="btn btn-primary m-r-sm">更新</button><small ng-class="{'fadeIn animated':!!interface.orderUpdateTrigger,'fadeOut animated':!interface.orderUpdateTrigger}" style="opacity:0">{{interface.orderUpdateMsg}}</small>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-12">
+					<h4>商品資訊</h4>
+					<table class="table table-bordered bg-light lter">
+						<thead>
+							<tr>
+								<th>項目</th><th>商品圖片</th><th>選購商品</th><th>規格資訊</th><th>單價</th><th>數量</th><th>小計</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="row in order.products">
+								<td>{{$index + 1}}</td>
+								<td><img ng-src="{{row.img}}" class="thumb"></td>
+								<td><span>{{row.name}}</span></td>
+								<td class="text-left"><span class="label bg-dark m-r-xs" ng-repeat="attr in row.attrs">{{attr.name}}</span><br><small class="text-muted">SKU編號：{{row.skuID}}</small></td>
+								<td>{{row.sellPrice | currency:"$ ":0}}</td>
+								<td>{{row.quantity}}</td>
+								<td>{{row.subtotal | currency:"$ ":0}}</td>
+							</tr>
+							<tr>
+								<td colspan="6" class="text-right">商品總額</td><td>{{order.productsTotal | currency:"$ ":0}}</td>
+							</tr>
+							<tr>
+								<td colspan="6" class="text-right">運費</td><td>{{order.shipFee | currency:"$ ":0}}</td>
+							</tr>
+							<tr>
+								<td colspan="6" class="text-right">總計金額</td><td class="text-danger"> {{order.productsTotal + order.shipFee | currency:"$ ":0}} </td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-4">
+					<h4>訂購人資訊</h4>
+					<table class="table table-bordered bg-light lter">
+						<tbody>
+							<tr>
+								<th class="w-sm">編號</th><td>{{order.consumerInfo.id}}</td>
+							</tr>
+							<tr>
+								<th>姓名</th><td>{{order.consumerInfo.name}}</td>
+							</tr>
+							<tr>
+								<th>電話</th><td>{{order.consumerInfo.phoneNumber}}</td>
+							</tr>
+							<tr>
+								<th>電子信箱</th><td>{{order.consumerInfo.email}}</td>
+							</tr>
+							<tr>
+								<th>身份證字號</th><td>{{order.consumerInfo.identity}}</td>
+							</tr>
+							<tr>
+								<th>出生日期</th><td>{{order.consumerInfo.birthday}}</td>
+							</tr>
+							<tr>
+								<th>通訊地址</th><td>{{order.consumerInfo.address}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-4">
+					<h4>收件人資訊</h4>
+					<table class="table table-bordered bg-light lter">
+						<tbody>
+							<tr>
+								<th class="w-sm">姓名</th><td>{{order.recipientInfo.name}}</td>
+							</tr>
+							<tr>
+								<th>手機號碼</th><td>{{order.recipientInfo.phoneNumber}}</td>
+							</tr>
+							<tr>
+								<th>室內電話</th><td>{{order.recipientInfo.telNumber}}</td>
+							</tr>
+							<tr>
+								<th>收貨地址</th><td>{{order.recipientInfo.address}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-4">
+					<h4>付款交易資訊</h4>
+					<table class="table table-bordered bg-light lter">
+						<tbody>
+							<tr>
+								<th class="w-sm">付款方式</th><td>{{order.transactionInfo.payment}}</td>
+							</tr>
+							<tr>
+								<th>付款狀態</th><td>{{order.transactionInfo.status}}</td>
+							</tr>
+							<tr>
+								<th>交易編號</th><td>{{order.transactionInfo.id}}</td>
+							</tr>
+							<tr>
+								<th>交易金額</th><td>{{order.transactionInfo.amounts | currency:"$ ":0}}</td>
+							</tr>
+							<tr>
+								<th>交易時間</th><td>{{order.transactionInfo.transDate}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-4">
+					<h4>發票資訊</h4>
+					<table class="table table-bordered bg-light lter">
+						<tbody>
+							<tr>
+								<th class="w-sm">發票類別</th><td>{{order.invoiceInfo.type}}</td>
+							</tr>
+							<tr>
+								<th>發票號碼</th><td>{{order.invoiceInfo.number}}</td>
+							</tr>
+							<tr>
+								<th>開立時間</th><td>{{order.invoiceInfo.createDate}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<h4>供應商資訊</h4>
+					<table class="table table-bordered bg-light lter">
+						<tbody>
+							<tr>
+								<th class="w-sm">編號</th><td>{{order.supplierInfo.id}}</td>
+							</tr>
+							<tr>
+								<th>名稱</th><td>{{order.supplierInfo.comName}}</td>
+							</tr>
+							<tr>
+								<th>電話</th><td>{{order.supplierInfo.tel}}</td>
+							</tr>
+							<tr>
+								<th>傳真</th><td>{{order.supplierInfo.fax}}</td>
+							</tr>
+							<tr>
+								<th>電子信箱</th><td>{{order.supplierInfo.email}}</td>
+							</tr>
+							<tr>
+								<th>訂單商品毛利</th><td class="text-danger">{{order.supplierInfo.profit | currency:"$ ":0}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="col-md-6">
+					<h4>賣家資訊</h4>
+					<table class="table table-bordered bg-light lter">
+						<tbody>
+							<tr>
+								<th class="w-sm">編號</th><td>{{order.sellerInfo.id}}</td>
+							</tr>
+							<tr>
+								<th>姓名</th><td>{{order.sellerInfo.name}}</td>
+							</tr>
+							<tr>
+								<th>電話</th><td>{{order.sellerInfo.phoneNumber}}</td>
+							</tr>
+							<tr>
+								<th>電子信箱</th><td>{{order.sellerInfo.email}}</td>
+							</tr>
+							<tr>
+								<th>該訂單賣場編號</th><td>{{order.sellerInfo.placeID}}</td>
+							</tr>
+							<tr>
+								<th>賣家所得利潤</th><td class="text-danger">{{order.sellerInfo.profit | currency:"$ ":0}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

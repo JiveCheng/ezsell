@@ -1,0 +1,231 @@
+<div class="hbox hbox-auto-xs bg-light" ng-init="interface.query()">
+	<!--用戶清單 -->
+	<div class="col w b-r" ng-if="currentRole.isAdmin">
+		<div class="vbox">
+			<div class="wrapper b-b"><div class="font-thin h4">用戶列表</div></div>
+			<div class="nav-tabs-alt">
+				<ul class="nav nav-tabs nav-justified">
+					<li ng-class="{'active': interface.accountTabs[0]}"><a href ng-click="interface.accountTab(0)">供應商</a></li>
+					<li ng-class="{'active': interface.accountTabs[1]}"><a href ng-click="interface.accountTab(1)">賣家</a></li>
+				</ul>
+			</div>
+			<div class="row-row">
+				<div class="cell scrollable hover">
+					<div class="cell-inner">
+						<div class="wrapper-sm">
+						<div class="input-group">
+							 <span class="input-group-addon input-sm"><i class="fa fa-search"></i></span>
+							 <input type="text" class="form-control input-sm" placeholder="搜尋用戶" ng-model="querystring">
+						</div>
+						</div>
+						<div class="tab-content">
+							<div class="tab-pane" ng-class="{'active': interface.accountTabs[0]}">
+								<div class="list-group no-radius no-border no-bg m-b-none">
+									<a ng-click="interface.query('billingList',item.id)" ng-repeat="item in accounts | filter:{userRole:'supplier'} | filter:querystring" ng-class="{'active':item.active}" class="list-group-item b-a">
+										<span class="block">{{item.name}}</span>
+									</a>
+								</div>
+							</div>
+							<div class="tab-pane" ng-class="{'active': interface.accountTabs[1]}">
+								<div class="list-group no-radius no-border no-bg m-b-none">
+									<a ng-click="interface.query('billingList',item.id)" ng-repeat="item in accounts | filter:{userRole:'seller'} | filter:querystring" ng-class="{'active':item.active}" class="list-group-item b-a">
+										<span class="block">{{item.name}}</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 帳務表清單 -->
+	<div class="col w-lg lt b-r">
+		<div class="vbox" ng-show="!!billingList" ng-class="{'fadeIn animated':!!billingList}">
+			<div class="wrapper b-b" ng-if="currentRole.isAdmin">
+				<div class="font-thin h4">{{billingList.username}} 當期帳務</div>
+			</div>
+			<div class="wrapper b-b" ng-if="currentRole.isAdmin">
+				<a href ng-click="interface.eidtorBillingStart()" class="list-group-item b-l-primary b-l-3x">
+					<span class="block text-ellipsis">點此開始編輯出帳表</span>
+					<small class="text-muted">總營收：{{interface.billingEditor.totalRevenue() | currency:'$ ':0}}</small>
+				</a>
+			</div>
+			<div class="wrapper-sm b-b">
+				<div class="font-thin h4" ng-if="currentRole.isAdmin">已出帳期列表</div>
+				<div class="font-thin h4" ng-if="!currentRole.isAdmin">帳期列表</div>
+			</div>
+			<div class="row-row">
+				<div class="cell scrollable hover">
+					<div class="cell-inner">
+						<div class="wrapper">
+							<a href ng-repeat="item in billingList.rows" ng-click="interface.query('billing',item.billingID)" ng-class="{'active':item.active}" class="list-group-item b-l-success b-l-3x">
+								<span class="block text-ellipsis">{{item.dateStart | date: 'yyyy-MM-dd'}} ~ {{item.dateEnd | date : 'yyyy-MM-dd'}} </span>
+								<small class="text-muted">總營收：{{item.totalRevenue | currency:'$ ':0}}</small>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 帳務表 -->
+	<div class="col lter">
+		<div class="vbox" ng-show="interface.billingPanelWrapShow" ng-class="{'fadeIn animated':interface.billingPanelWrapShow}">
+			<div class="row-row">
+				<div class="cell scrollable">
+					<!-- 帳務編輯 -->
+					<div class="cell-inner" ng-show="interface.billingEditor.opened">
+						<div class="wrapper form-inline">
+							<uib-alert ng-repeat="alert in interface.alerts2" type="{{alert.type}}" close="interface.closeAlert($index,'alerts2')" class="animated fadeIn">{{alert.msg}}</uib-alert>
+							<div class="panel panel-default">
+								<div class="panel-heading">ezSell當期帳務表</div>
+								<div class="panel-body">
+									<p>客戶名稱：{{interface.billingEditor.data.username}}</p>
+									<div class="m-b-xs">
+										<span>帳務期間：</span>
+										<div class="input-group input-group-sm">
+											<input type="date" class="form-control uib-datepicker" uib-datepicker-popup ng-model="interface.billingEditor.data.dateStart" is-open="interface.billingEditor.datePicker.status.dateStartOpened" min-date="interface.billingEditor.datePicker.minDate" max-date="interface.billingEditor.datePicker.maxDate" datepicker-options="interface.billingEditor.datePicker.dateOptions" ng-required="true" close-text="Close" />
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default" ng-click="interface.billingEditor.datePicker.open($event,'dateStartOpened')"><i class="fa fa-calendar"></i></button>
+											</span>
+										</div>
+										<span> 至 </span>
+										<div class="input-group input-group-sm">
+											<input type="date" class="form-control uib-datepicker" uib-datepicker-popup ng-model="interface.billingEditor.data.dateEnd" is-open="interface.billingEditor.datePicker.status.dateEndOpened" min-date="interface.billingEditor.data.dateStart" max-date="interface.billingEditor.datePicker.maxDate" datepicker-options="interface.billingEditor.datePicker.dateOptions" ng-required="true" close-text="Close" />
+											<span class="input-group-btn">
+												<button type="button" class="btn btn-default" ng-click="interface.billingEditor.datePicker.open($event,'dateEndOpened')"><i class="fa fa-calendar"></i></button>
+											</span>
+										</div>
+										<button class="btn btn-sm btn-default" ng-click="interface.editorBillingQuery()">查尋</button>
+									</div>
+									<p>帳務狀態：{{'0' | statuFilter: interface.billingStatus}}</p>
+									<p>帳務清單：<span class="text-muted">（紅色文字為扣除項目）</span></p>
+								</div>
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th class="b-r">金流渠道名稱</th>
+											<th class="b-r">訂單總營收</th>
+											<th class="b-r">ezSell手續費</th>
+											<th class="b-r">賣家分潤金額</th>
+											<th>您的應收金額</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="row in interface.billingEditor.data.rows">
+											<td>{{row.payment}}</td>
+											<td>{{row.revenue | currency:$ :0}}</td>
+											<td class="text-danger">{{row.ezsellcost | currency:$ :0}}</td>
+											<td class="text-danger">{{row.sellercost | currency:$ :0}}</td>
+											<td ng-class="{'text-danger':row.profit<0}">{{row.profit | currency:$ :0}}</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="4" class="b-r">
+												<div class="text-right">您的總應收金額：</div>
+											</td>
+											<td ng-class="{'text-danger':interface.billingEditor.totalbilling()<0}">{{interface.billingEditor.totalbilling() | currency:'$ ':0}}</td>
+										</tr>
+									</tfoot>
+								</table>
+								<div class="panel-body">
+									<div class="m-b-xs">預計匯款日：<div class="input-group input-group-sm"><input type="date" class="form-control uib-datepicker" uib-datepicker-popup ng-model="interface.billingEditor.data.dateRemittances" is-open="interface.billingEditor.datePicker.status.dateRemittancesOpened" min-date="interface.billingEditor.datePicker.minDate" max-date="interface.billingEditor.datePicker.maxDate" datepicker-options="interface.billingEditor.datePicker.dateOptions" ng-required="true" close-text="Close" /><span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="interface.billingEditor.datePicker.open($event,'dateRemittancesOpened')"><i class="fa fa-calendar"></i></button></span></div>
+									<span class="text-muted">請在</span>
+									<div class="input-group input-group-sm"><input type="date" class="form-control uib-datepicker" uib-datepicker-popup ng-model="interface.billingEditor.data.dateReqInovice" is-open="interface.billingEditor.datePicker.status.dateReqInoviceOpened" min-date="interface.billingEditor.datePicker.minDate" max-date="interface.billingEditor.datePicker.maxDate" datepicker-options="interface.billingEditor.datePicker.dateOptions" ng-required="true" close-text="Close" /><span class="input-group-btn"><button type="button" class="btn btn-default" ng-click="interface.billingEditor.datePicker.open($event,'dateReqInoviceOpened')"><i class="fa fa-calendar"></i></button></span></div>
+									<span class="text-muted">前將發票寄至ezSell</span></div>
+									<p>銀行帳戶：{{interface.billingEditor.data.bankAccountNumber}}</p>
+								</div>
+								<div class="panel-footer">
+									<button class="btn btn-addon btn-primary" ng-click="interface.billingEditor.done()"><i class="fa fa-paper-plane"></i></i>編輯完成，寄出帳表</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 歷史帳務表 -->
+					<div class="cell-inner" ng-show="!interface.billingEditor.opened">
+						<div class="wrapper">
+							<uib-alert ng-repeat="alert in interface.alerts" type="{{alert.type}}" close="interface.closeAlert($index)" class="animated fadeIn">{{alert.msg}}</uib-alert>
+							<div class="panel panel-default" ng-show="interface.billingPanelShow">
+								<div class="panel-heading">ezSell當期帳務表</div>
+								<div class="panel-body">
+									<p>客戶名稱：{{billing.username}}</p>
+									<p>帳務期間：{{billing.dateStart | date : 'yyyy-MM-dd'}} 至 {{billing.dateEnd | date : 'yyyy-MM-dd'}}</p>
+									<p>帳務狀態：{{billing.billingStatus | statuFilter: interface.billingStatus}}</p>
+									<p>帳務清單：<span class="text-muted">（紅色文字為扣除項目）</span></p>
+								</div>
+								<!-- 供應商的帳務統計表 -->
+								<table class="table table-striped" ng-if="billing.billingRole=='supplier'">
+									<thead>
+										<tr>
+											<th class="b-r">金流渠道名稱</th>
+											<th class="b-r">訂單總營收</th>
+											<th class="b-r">ezSell手續費</th>
+											<th class="b-r">賣家分潤金額</th>
+											<th>您的應收金額</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="row in billing.rows">
+											<td>{{row.payment}}</td>
+											<td>{{row.revenue | currency:$ :0}}</td>
+											<td class="text-danger">{{row.ezsellcost | currency:$ :0}}</td>
+											<td class="text-danger">{{row.sellercost | currency:$ :0}}</td>
+											<td ng-class="{'text-danger':row.profit<0}">{{row.profit | currency:$ :0}}</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="4" class="b-r">
+												<div class="text-right">您的總應收金額：</div>
+											</td>
+											<td ng-class="{'text-danger':interface.totalbilling()<0}">{{interface.totalbilling() | currency:'$ ':0}}</td>
+										</tr>
+									</tfoot>
+								</table>
+								<!-- 賣家的帳務統計表 -->
+								<table class="table table-striped" ng-if="billing.billingRole=='seller'">
+									<thead>
+										<tr>
+											<th class="b-r">金流渠道名稱</th>
+											<th class="b-r">訂單總營收</th>
+											<th>您的應收金額</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr ng-repeat="row in billing.rows">
+											<td>{{row.payment}}</td>
+											<td>{{row.revenue | currency:$ :0}}</td>
+											<td>{{row.sellercost | currency:$ :0}}</td>
+										</tr>
+									</tbody>
+									<tfoot>
+										<tr>
+											<td colspan="2" class="b-r">
+												<div class="text-right">您的總應收金額：</div>
+											</td>
+											<td ng-class="{'text-danger':interface.totalbilling()<0}">{{interface.totalbilling() | currency:'$ ':0}}</td>
+										</tr>
+									</tfoot>
+								</table>
+								<div class="panel-body">
+									<p ng-show="billing.billingStatus>0 && billing.billingStatus<3">預計匯款日：{{billing.expectRemittances | date : app.settings.dateFormats[0]}} <span class="text-muted">請在2015/10/05前將發票寄至ezSell</span></p>
+									<p ng-show="billing.billingStatus==3">結款日期：{{billing.remittancesDate | date: app.settings.dateFormats[0]}}</p>
+									<p>銀行帳戶：{{billing.bankAccountNumber}}</p>
+								</div>
+								<div class="panel-footer" ng-hide="billing.billingStatus==3" ng-if="currentRole.isAdmin">
+									<button class="btn btn-addon btn-primary" ng-click="interface.billingUpdate(3)" ng-show="billing.billingStatus>0 && billing.billingStatus<3"><i class="fa fa-check"></i>變更狀態為：已結款</button>
+									<button class="btn btn-addon btn-danger" ng-click="interface.billingUpdate(0)" ng-show="billing.billingStatus==1"><i class="fa fa-times"></i>刪除此帳務表</button>
+								</div>
+								<div class="panel-footer" ng-if="!currentRole.isAdmin&&billing.billingStatus==1">
+									<button class="btn btn-addon btn-primary" ng-click="interface.billingUpdate(2)" ng-show="billing.billingStatus==1"><i class="fa fa-check"></i>變更狀態為：已確認</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

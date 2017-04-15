@@ -1,0 +1,58 @@
+<!doctype html>
+<html data-ng-app="app">
+<head>
+<meta charset="utf-8">
+<link type="text/css" href="lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<link type="text/css" href="lib/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+<link type="text/css" href="lib/angular-loading-bar/src/loading-bar.css" rel="stylesheet">
+<link type="text/css" href="lib/textAngular/dist/textAngular.css" rel="stylesheet">
+<link type="text/css" href="lib/angular-ui-select/dist/select.min.css" rel="stylesheet">
+<link type="text/css" href="css/ezsell.css" rel="stylesheet">
+</head>
+<body ng-controller="AppCtrl">
+<div style="display:none">
+	$stateParams = {{$stateParams}}
+	currentUser = {{app.currentUser}}
+	userRoles = {{app.userRoles}}
+	isAuthorized = {{app.isAuthorized}}
+</div>
+<div id="app" class="app animated" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed,'app-aside-folded':app.settings.asideFolded,'app-aside-dock':app.settings.asideDock,'container':app.settings.container,'fadeIn':app.loaded}" ui-view style="opacity:0"></div>
+<!-- JQUERY -->
+<script src="lib/jquery/dist/jquery.min.js"></script>
+<!-- ANGULAR -->
+<script src="lib/angular/angular.min.js"></script>
+<!-- ANGULAR MODULES -->
+<script src="lib/ngstorage/ngStorage.min.js"></script>
+<script src="lib/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="lib/angular-ui-select/dist/select.min.js"></script>
+<script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="lib/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="lib/angular-loading-bar/src/loading-bar.js"></script>
+<script src="lib/textAngular/dist/textAngular-rangy.min.js"></script>
+<script src="lib/textAngular/dist/textAngular-sanitize.min.js"></script>
+<script src="lib/textAngular/dist/textAngular.min.js"></script>
+<script src="lib/checklist-model/checklist-model.js"></script>
+<script src="lib/ng-flow/dist/ng-flow-standalone.min.js"></script>
+<script src="lib/qrcode-generator/js/qrcode.min.js"></script>
+<script src="lib/qrcode-generator/js/qrcode_UTF8.min.js"></script>
+<script src="lib/angular-qrcode/angular-qrcode.min.js"></script>
+<script src="lib/download/download.min.js"></script>
+<!-- APP START -->
+<script src="js/app.js"></script>
+<script src="js/config.js"></script>
+<script src="js/constants/constants.js"></script>
+<script src="js/services/services.js"></script>
+<script src="js/directives/ui-nav.js"></script>
+<script src="js/controller/product.list.js"></script>
+<script src="js/controller/product.browser.js"></script>
+<script src="js/controller/product.editor.js"></script>
+<script src="js/controller/marketplace.js"></script>
+<script src="js/controller/upload.js"></script>
+<script src="js/controller/nowsell.js"></script>
+<script src="js/controller/place.editor.js"></script>
+<script src="js/controller/order.list.js"></script>
+<script src="js/controller/order.detail.js"></script>
+<script src="js/controller/billing.js"></script>
+<script src="js/controller/info.js"></script>
+</body>
+</html>

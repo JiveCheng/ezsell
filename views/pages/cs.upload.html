@@ -1,0 +1,22 @@
+<div flow-init="{target: '/api/upload',testChunks:false,query: {sessionID: app.currentUser.sessionID}}" flow-files-submitted="$flow.upload()" flow-file-added="!!{png:1,gif:1,jpg:1,jpeg:1}[$file.getExtension()]" flow-file-success="uploadSuccess($message)">
+	<div class="modal-header">
+		<h3 class="modal-title">上傳圖片</h3>
+	</div>
+	<div class="modal-body">
+		<div class="upload-droparea" flow-drop>
+			<span class="btn btn-default" flow-btn>選擇多個圖片</span>
+			<b>或</b>
+			將您的圖片拖曳至此區
+		</div>
+		<div class="row">
+			<div class="col-sm-4 col-md-3 img-d hover-anchor" ng-repeat="file in $flow.files">
+				<span class="remove text-muted hover-action" ng-click="file.cancel()"><i class="fa fa-times"></i></span>
+				<img class="img-responsive thumbnail" flow-img="file"/>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" type="button" ng-click="ok()">ok</button>
+		<button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+	</div>
+</div>

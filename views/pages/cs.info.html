@@ -1,0 +1,205 @@
+<div class="hbox hbox-auto-xs bg-light" ng-init="interface.query()">
+	<div class="col w b-r" ng-if="currentRole.isAdmin">
+		<div class="vbox">
+			<div class="wrapper b-b"><div class="font-thin h4">用戶列表</div></div>
+			<div class="nav-tabs-alt">
+				<ul class="nav nav-tabs nav-justified">
+					<li ng-class="{'active': interface.accountTabs[0]}"><a href ng-click="interface.accountTab(0)">供應商</a></li>
+					<li ng-class="{'active': interface.accountTabs[1]}"><a href ng-click="interface.accountTab(1)">賣家</a></li>
+				</ul>
+			</div>
+			<div class="row-row">
+				<div class="cell scrollable hover">
+					<div class="cell-inner">
+						<div class="wrapper-sm">
+						<div class="input-group">
+							 <span class="input-group-addon input-sm"><i class="fa fa-search"></i></span>
+							 <input type="text" class="form-control input-sm" placeholder="搜尋用戶" ng-model="querystring">
+						</div>
+						</div>
+						<div class="tab-content">
+							<div class="tab-pane" ng-class="{'active': interface.accountTabs[0]}">
+								<div class="list-group no-radius no-border no-bg m-b-none">
+									<a ng-click="interface.query('info',item.id)" ng-repeat="item in accounts | filter:{userRole:'supplier'} | filter:querystring" ng-class="{'active':item.active}" class="list-group-item b-a">
+										<span class="block">{{item.name}}</span>
+									</a>
+								</div>
+							</div>
+							<div class="tab-pane" ng-class="{'active': interface.accountTabs[1]}">
+								<div class="list-group no-radius no-border no-bg m-b-none">
+									<a ng-click="interface.query('info',item.id)" ng-repeat="item in accounts | filter:{userRole:'seller'} | filter:querystring" ng-class="{'active':item.active}" class="list-group-item b-a">
+										<span class="block">{{item.name}}</span>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col lter">
+		<div class="vbox">
+			<div class="row-row">
+				<div class="cell scrollable">
+					<div class="cell-inner">
+						<form>
+						<uib-alert ng-repeat="alert in interface.alerts" type="{{alert.type}}" close="interface.closeAlert($index,'alerts')" class="animated fadeIn m-n no-radius">{{alert.msg}}</uib-alert>
+						<div class="wrapper">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<span class="h4">公司基本資料</span>
+										</div>
+										<div class="panel-body">
+											<div class="form-group row">
+												<div class="col-sm-6">
+													<label>公司名稱</label>
+													<div class="input-group m-b">
+														<input type="text" class="form-control" required ng-model="info.basicInfo.comName" ng-readonly="!edit[0]" ng-blur="edit[0] = false" ng-keypress="dataChangeStatus = true">
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-default" ng-click="edit[0] = true"><i class="fa fa-pencil-square-o"></i></button>
+														</span>
+													</div>
+												</div>
+												<div class="col-sm-6">
+													<label>公司統編</label>
+													<div class="input-group m-b">
+														<input type="text" class="form-control" required ng-model="info.basicInfo.comTax" ng-readonly="!edit[1]" ng-blur="edit[1] = false" ng-keypress="dataChangeStatus = true">
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-default" ng-click="edit[1] = true"><i class="fa fa-pencil-square-o"></i></button>
+														</span>
+													</div>
+												</div>
+											</div>
+											<div class="form-group row">
+												<div class="col-sm-4">
+													<label>公司電話</label>
+													<div class="input-group m-b">
+													<input type="text" required class="form-control" ng-model="info.basicInfo.comTel" ng-readonly="!edit[2]" ng-blur="edit[2] = false" ng-keypress="dataChangeStatus = true">
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-default" ng-click="edit[2] = true"><i class="fa fa-pencil-square-o"></i></button>
+														</span>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<label>公司傳真</label>
+													<div class="input-group m-b">
+													<input type="text" required class="form-control" ng-model="info.basicInfo.comFax" ng-readonly="!edit[3]" ng-blur="edit[3] = false" ng-keypress="dataChangeStatus = true">
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-default" ng-click="edit[3] = true"><i class="fa fa-pencil-square-o"></i></button>
+														</span>
+													</div>
+												</div>
+												<div class="col-sm-4">
+													<label>公司信箱</label>
+													<div class="input-group m-b">
+													<input type="text" required class="form-control" ng-model="info.basicInfo.comEmail" ng-readonly="!edit[4]" ng-blur="edit[4] = false" ng-keypress="dataChangeStatus = true">
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-default" ng-click="edit[4] = true"><i class="fa fa-pencil-square-o"></i></button>
+														</span>
+													</div>
+												</div>
+											</div>
+											<div class="form-group row">
+												<div class="col-sm-12">
+													<label>公司地址</label>
+													<div class="input-group m-b">
+													<input type="text" required class="form-control" ng-model="info.basicInfo.comAddress" ng-readonly="!edit[5]" ng-blur="edit[5] = false" ng-keypress="dataChangeStatus = true">
+														<span class="input-group-btn">
+															<button type="button" class="btn btn-default" ng-click="edit[5] = true"><i class="fa fa-pencil-square-o"></i></button>
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<span class="h4">銀行帳戶資料</span>
+										</div>
+										<div class="panel-body">
+											<div class="form-group">
+												<label>銀行名稱</label>
+												<div class="input-group m-b">
+												<input type="text" required class="form-control" ng-model="info.bankInfo.bankName" ng-readonly="!edit[6]" ng-blur="edit[6] = false" ng-keypress="dataChangeStatus = true">
+													<span class="input-group-btn">
+														<button type="button" class="btn btn-default" ng-click="edit[6] = true"><i class="fa fa-pencil-square-o"></i></button>
+													</span>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>分行名稱</label>
+												<div class="input-group m-b">
+													<input type="text" required class="form-control" ng-model="info.bankInfo.branchName" ng-readonly="!edit[7]" ng-blur="edit[7] = false" ng-keypress="dataChangeStatus = true">
+													<span class="input-group-btn">
+														<button type="button" class="btn btn-default" ng-click="edit[7] = true"><i class="fa fa-pencil-square-o"></i></button>
+													</span>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>銀行戶名</label>
+												<div class="input-group m-b">
+													<input type="text" required class="form-control" ng-model="info.bankInfo.accountName" ng-readonly="!edit[8]" ng-blur="edit[8] = false" ng-keypress="dataChangeStatus = true">
+													<span class="input-group-btn">
+														<button type="button" class="btn btn-default" ng-click="edit[8] = true"><i class="fa fa-pencil-square-o"></i></button>
+													</span>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>銀行帳號</label>
+												<div class="input-group m-b">
+													<input type="text" required class="form-control" ng-model="info.bankInfo.accountNumber" ng-readonly="!edit[9]" ng-blur="edit[9] = false" ng-keypress="dataChangeStatus = true">
+													<span class="input-group-btn">
+														<button type="button" class="btn btn-default" ng-click="edit[9] = true"><i class="fa fa-pencil-square-o"></i></button>
+													</span>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>Swift Code</label>
+												<div class="input-group m-b">
+													<input type="text" required class="form-control" ng-model="info.bankInfo.swiftCode" ng-readonly="!edit[10]" ng-blur="edit[10] = false" ng-keypress="dataChangeStatus = true">
+													<span class="input-group-btn">
+														<button type="button" class="btn btn-default" ng-click="edit[10] = true"><i class="fa fa-pencil-square-o"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-3">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<span class="h4">ezSell帳號資料</span>
+										</div>
+										<div class="panel-body">
+											<div class="form-group">
+												<label>帳號</label>
+												<input type="text" required class="form-control" ng-model="info.userAccountName" readonly>
+											</div>
+											<div class="form-group">
+												<label>密碼</label>
+												<div class="input-group m-b">
+													<input type="password" required class="form-control" ng-model="info.userAccountPass" ng-readonly="!edit[12]" ng-blur="edit[12] = false" ng-keypress="dataChangeStatus = true">
+													<span class="input-group-btn">
+														<button type="button" class="btn btn-default" ng-click="edit[12] = true">重設 <i class="fa fa-pencil-square-o"></i></button>
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="app-footer wrapper-md bg-light lt b-t animated" ng-class="{'fadeInUp':dataChangeStatus,'fadeOutDown':!dataChangeStatus}">
+								<button type="button" class="btn btn-primary btn-addon" ng-click="interface.update()" ng-disabled="!dataChangeStatus"><i class="fa fa-refresh"></i>確認更新資料</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</form>

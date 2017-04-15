@@ -1,0 +1,117 @@
+<div class="wrapper-md" ng-init="interface.search.start()">
+	<div class="console">
+		<p>selectedId : {{interface.selectedID}}</p>
+		<p>selectedAll : {{interface.selectedAll}}</p>
+	</div>
+	<alert ng-repeat="alert in interface.alerts" type="{{alert.type}}" close="interface.closeAlert($index)" class="animated fadeIn">{{alert.msg}}</alert>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<span class="h4">賣場列表</span>
+		</div>
+		<div class="panel-body">
+			<form class="row">
+				<div class="form-group col-md-2">
+					<label>賣家篩選</label>
+					<select class="input-sm form-control" ng-options="option.name for option in interface.sellerData" ng-model="interface.search.sellerID" ng-change="interface.changeCondition()"><option value>- 請選擇 -</option></select>
+				</div>
+				<div class="form-group col-md-2">
+					<label>狀態篩選</label>
+					<select class="input-sm form-control" ng-options="option.name for option in interface.statusOptions track by option.status" ng-model="interface.search.status" ng-change="interface.changeCondition()"><option value>- 請選擇 -</option></select>
+				</div>
+				<div class="form-group col-md-2">
+					<label>形態篩選</label>
+					<select class="input-sm form-control" ng-options="type.name for type in interface.typeOptions track by type.type" ng-model="interface.search.type" ng-change="interface.changeCondition()"><option value>- 請選擇 -</option></select>
+				</div>
+				<div class="form-group col-md-2">
+					<label>賣場搜尋</label>
+					<div class="input-group">
+						<input type="text" placeholder="請輸入賣場編號或主標" class="input-sm form-control" ng-model="interface.search.string">
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-sm btn-default" ng-click="interface.searchPlace()">搜尋</button>
+						</span>
+					</div>
+				</div>
+
+			</form>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-striped b-t b-light">
+				<thead>
+					<tr>
+						<th class="w-xxs">
+							<div class="checkbox">
+								<label class="i-checks i-checks-sm"><input type="checkbox" ng-checked="interface.selectedAll" ng-click="interface.checkAll()"><i></i></label>
+							</div>
+						</th>
+						<th>賣家</th>
+						<th>狀態</th>
+						<th>形態</th>
+						<th>編號</th>
+						<th>主標</th>
+						<th>賣場網址</th>
+						<th>短網址</th>
+						<th>銷售商品</th>
+						<th>商品圖片</th>
+						<th>商品介紹<br>資源網址</th>
+						<th>商品售價</th>
+						<th>每筆利潤</th>
+						<th>銷量</th>
+						<th>目前賣場收入</th>
+						<th class="w-xs">建立時間</th>
+						<th class="w-xs"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="row in places">
+						<td>
+							<div class="checkbox">
+								<label class="i-checks i-checks-sm"><input type="checkbox" checklist-model="interface.selectedID" checklist-value="row.placeID"><i></i></label>
+							</div>
+						</td>
+						<td class="p-ellipsis"><span>{{row.sellerName}}（{{row.sellerID}}）</span></td>
+						<td>{{row.status | statuFilter: interface.statusOptions}}</td>
+						<td>{{row.type}}</td>
+						<td class="p-ellipsis"><span title="{{row.placeID}}">{{row.placeID}}</span></td>
+						<td>{{row.placeName}}</td>
+						<td class="p-ellipsis"><span>{{row.placeUrl}}</span></td>
+						<td><span ng-if="!!row.placeShortenUrl">{{row.placeShortenUrl}}</span><button class="btn btn-xs btn-default" ng-if="!row.placeShortenUrl" ng-click="interface.createShortenURL(row.placeUrl,$index,row.placeID)">短網址</button></td>
+						<td>{{row.productName}}</td>
+						<td><img ng-src="{{row.productImg}}" class="thumb" /></td>
+						<td>{{row.productDataUrl}}</td>
+						<td>{{row.sellprice}}</td>
+						<td>{{row.sellProft}}</td>
+						<td>{{row.sellnum}}</td>
+						<td>{{row.sellTotalProft}}</td>
+						<td>{{row.createDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+						<td>
+							<div class="btn-group-vertical">
+								<a ng-click="interface.nowSellModal('sm',$index)" class="btn btn-xs btn-default"><i class="fa fa-qrcode"></i> 立即賣！</a>
+								<a class="btn btn-xs btn-default" ng-click="interface.editorModal('lg',$index)"><i class="fa fa-pencil-square-o"></i> 編輯</a>
+								<a class="btn btn-xs btn-default" ng-click="interface.qrDownload(row.placeShortenUrl || row.placeUrl,$index,row.placeName)"><i class="fa fa-download"></i> 下載QR Code</a>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="panel-footer">
+			<div class="row">
+				<div class="col-sm-4 text-center"></div>
+				<div class="col-sm-4 text-center"></div>
+				<div class="col-sm-4 text-right text-center-xs">
+					<uib-pagination total-items="interface.totalItems" max-size="10" ng-model="interface.currentPage" class="pagination-sm" previous-text="上一頁" next-text="下一頁" ng-change="interface.changePage()"></uib-pagination>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="app-footer app-footer-fixed wrapper-md bg-light lt b-t animated" ng-class="{'fadeInUp':!interface.unSelected(),'fadeOutDown':interface.unSelected()}">
+	<div class="btn-group dropdown dropup" uib-dropdown>
+		<button type="button" class="btn btn-primary btn-addon dropdown-toggle" uib-dropdown-toggle ng-disabled="interface.unSelected()"><i class="fa fa-sliders"></i>變更狀態</button>
+		<ul class="dropdown-menu">
+			<li><a href ng-click="interface.changeStatus(0)">關閉賣場</a></li>
+			<li><a href ng-click="interface.changeStatus(1)">開啟賣場</a></li>
+		</ul>
+	</div>
+	<small class="text-muted">已選擇：{{interface.selectedID.length}}件商品</small>
+</div>

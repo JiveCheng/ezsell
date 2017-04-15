@@ -1,0 +1,9 @@
+<div class="modal-header">
+	<h3 class="modal-title">掃描QRCode</h3>
+</div>
+<div class="modal-body">
+	<qrcode download version="2" error-correction-level="M" size="1000" data="{{place.qrcodeData}}"></qrcode>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-default" type="button" ng-click="cancel()">關閉</button>
+</div>

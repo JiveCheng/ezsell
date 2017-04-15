@@ -1,0 +1,41 @@
+<div class="wrapper-md" ng-init="interface.search.start()">
+	<uib-alert ng-repeat="alert in interface.alerts" type="{{alert.type}}" close="interface.closeAlert($index)" class="animated fadeIn">{{alert.msg}}</uib-alert>
+	<div class="row">
+		<div class="col-lg-2 col-md-3" ng-repeat="item in products">
+			<div class="panel b-a">
+				<div class="item">
+					<div class="top text-right wrapper-xs w-full"><small class="label md bg-dark">{{item.supplierName}}</small></div>
+					<a><img class="img-full" ng-src="{{item.productImg}}"></a>
+				</div>
+				<div class="wrapper-sm b-b b-light">
+					<a><span class="block text-ellipsis">{{item.mainName}}</span><small class="text-ellipsis">{{item.secName}}</small></a>
+				</div>
+				<div class="hbox b-b b-light bg-light lter wrapper-sm">
+					<div class="col">
+						<small class="block text-muted">售價</small>
+						<span class="text-md">{{item.sellprice | currency:'$ ':0}}</span>
+					</div>
+					<div class="col">
+						<small class="block text-muted">利潤</small>
+						<span class="text-md">{{item.sellProft | currency:'$ ':0}}</span>
+					</div>
+					<div class="col">
+						<small class="block text-muted">銷量</small>
+						<span class="text-md">{{item.sellnum}}</span>
+					</div>
+				</div>
+				<div class="hbox text-center text-sm">
+					<a class="col padder-v text-muted b-r b-light" ng-click="interface.addPlace(item.productID)">
+						<span><i class="fa fa-plus"></i> 加入賣場</span>
+					</a>
+					<a class="col padder-v text-muted b-r b-light" ng-click="interface.nowSell(item.nowSellUrl)">
+						<span><i class="fa fa-qrcode"></i> 立即賣</span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="text-center-xs">
+		<uib-pagination total-items="interface.totalItems" max-size="10" ng-model="interface.currentPage" class="pagination-sm" previous-text="上一頁" next-text="下一頁" ng-change="interface.changePage()"></uib-pagination>
+	</div>
+</div>

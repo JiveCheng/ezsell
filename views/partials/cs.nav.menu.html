@@ -1,0 +1,78 @@
+<div class="aside-wrap">
+	<div class="navi-wrap">
+		<nav ui-nav class="navi">
+			<ul class="nav">
+				<li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+					<span>Navigation</span>
+				</li>
+				<li ui-sref-active="active">
+					<a ui-sref="cs.admin.dashboard" ng-if="currentRole.isAdmin"><i class="glyphicon glyphicon-stats"></i><span class="font-bold">Dashboard</span></a>
+					<a ui-sref="cs.supplier.dashboard" ng-if="currentRole.isSupplier"><i class="glyphicon glyphicon-stats"></i><span class="font-bold">Dashboard</span></a>
+					<a ui-sref="cs.seller.dashboard" ng-if="currentRole.isSeller"><i class="glyphicon glyphicon-stats"></i><span class="font-bold">Dashboard</span></a>
+				</li>
+				<li ui-sref-active="active" ng-if="currentRole.isSeller">
+					<a href class="auto" ui-sref="cs.seller.products-list">
+						<i class="fa fa-th-list"></i><span class="font-bold">商品瀏覽</span>
+					</a href>
+				</li>
+				<li ng-if="!currentRole.isSeller">
+					<a href class="auto">
+						<span class="pull-right text-muted">
+							<i class="fa fa-fw fa-angle-right text"></i>
+							<i class="fa fa-fw fa-angle-down text-active"></i>
+						</span>
+						<i class="fa fa-th-list"></i><span class="font-bold">商品管理</span>
+					</a href>
+					<ul class="nav nav-sub dk">
+						<li class="nav-sub-header">
+							<a disabled>
+								<span>商品管理</span>
+							</a>
+						</li>
+						<li ui-sref-active="active">
+							<a ui-sref="cs.admin.products-list" ng-if="currentRole.isAdmin"><span>商品查詢</span></a>
+							<a ui-sref="cs.supplier.products-list" ng-if="currentRole.isSupplier"><span>商品查詢</span></a>
+						</li>
+						<li ui-sref-active="active">
+							<a ui-sref="cs.admin.products-add" ng-if="currentRole.isAdmin"><span>新增商品</span></a>
+							<a ui-sref="cs.supplier.products-add" ng-if="currentRole.isSupplier"><span>新增商品</span></a>
+						</li>
+						<!--
+						<li ui-sref-active="active" ng-if="currentRole.isAdmin">
+							<a ui-sref="cs.admin.products-add"><span>編輯規格屬性</span></a>
+						</li>
+						<li ui-sref-active="active">
+							<a ui-sref="cs.admin.products-bulkupload" ng-if="currentRole.isAdmin"><span>商品大量上傳</span></a>
+							<a ui-sref="cs.supplier.products-bulkupload" ng-if="currentRole.isSupplier"><span>商品大量上傳</span></a>
+						</li>
+						-->
+					</ul>
+				</li>
+				<li ui-sref-active="active">
+					<a ui-sref="cs.admin.marketplace" ng-if="currentRole.isAdmin" href><i class="fa fa-anchor"></i><span class="font-bold">賣場管理</span></a href>
+					<a ui-sref="cs.seller.marketplace" ng-if="currentRole.isSeller" href><i class="fa fa-anchor"></i><span class="font-bold">賣場管理</span></a href>
+				</li>
+				<li ui-sref-active="active">
+					<a ui-sref="cs.admin.orders" ng-if="currentRole.isAdmin" href><i class="fa fa-truck"></i><span class="font-bold">訂單管理</span></a href>
+					<a ui-sref="cs.supplier.orders" ng-if="currentRole.isSupplier" href><i class="fa fa-truck"></i><span class="font-bold">訂單管理</span></a href>
+					<a ui-sref="cs.seller.orders" ng-if="currentRole.isSeller" href><i class="fa fa-truck"></i><span class="font-bold">訂單查詢</span></a href>
+				</li>
+				<li ui-sref-active="active">
+					<a ui-sref="cs.admin.billing" ng-if="currentRole.isAdmin" class="auto"><i class="fa fa-dollar"></i><span class="font-bold">帳務管理</span></a>
+					<a ui-sref="cs.supplier.billing" ng-if="currentRole.isSupplier" class="auto"><i class="fa fa-dollar"></i><span class="font-bold">帳務管理</span></a>
+					<a ui-sref="cs.seller.billing" ng-if="currentRole.isSeller" class="auto"><i class="fa fa-dollar"></i><span class="font-bold">帳務管理</span></a>
+				</li>
+				<li class="line dk hidden-folded"></li>
+
+				<li class="hidden-folded padder m-t m-b-sm text-muted text-xs">          
+					<span>Profile</span>
+				</li>  
+				<li ui-sref-active="active">
+					<a ui-sref="cs.admin.info" ng-if="currentRole.isAdmin"><i class="fa fa-info-circle"></i><span>基本資料設置</span></a>
+					<a ui-sref="cs.supplier.info" ng-if="currentRole.isSupplier"><i class="fa fa-info-circle"></i><span>基本資料設置</span></a>
+					<a ui-sref="cs.seller.info" ng-if="currentRole.isSeller"><i class="fa fa-info-circle"></i><span>基本資料設置</span></a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</div>

@@ -1,0 +1,187 @@
+<div class="hbox hbox-auto-xs bg-light" ng-init="interface.startLoad()">
+	<div class="col w-lg lt b-r footer">
+		<div class="vbox">
+			<div class="wrapper bg-light dk">
+				<a ng-click="interface.createSpecs()" class="pull-right btn btn-sm btn-info m-t-n-xs" href="">新增規格（SKU）</a>
+				<div class="h4">規格列表</div>
+			</div>
+			<div class="wrapper b-t">
+				<a href class="list-group-item b-l-primary b-l-2x" ng-click="interface.changeEditMode('main')" ng-class="{'hover':product.active}">
+					<span class="block text-ellipsis">商品主檔</span>
+					<small class="text-muted text-ellipsis" ng-if="!!product.productID">{{product.productID}}</small>
+					<small class="text-muted text-ellipsis" ng-if="!product.productID">（新商品主檔）</small>
+				</a>
+			</div>
+			<div class="row-row">
+				<div class="cell scrollable hover">
+					<div class="cell-inner">
+						<div class="padder">
+							<div class="list-group">
+								<!-- 主規格，不可刪除 -->
+								<a class="list-group-item b-l-info b-l-2x" ng-repeat="spec in product.specs | filter: {skuID:product.skuMainID}" ng-click="interface.changeEditMode('specs',spec.skuID)" ng-class="{'hover': spec.active}">
+									<div class="block">
+										<span class="label bg-info m-r-xs" ng-repeat="attr in spec.attrs">{{attr.name}}</span>
+									</div>
+									<small class="text-muted text-ellipsis">{{spec.skuID}}</small>
+								</a>
+								<!-- 其他規格，可刪除，刪除時為控制specs.shelves為false -->
+								<a class="list-group-item b-l-default b-l-2x hover-anchor" ng-repeat="spec in product.specs | filter:{skuID:'!' + product.skuMainID} | filter:{shelves: true}" ng-click="interface.changeEditMode('specs',spec.skuID)" ng-class="{'hover': spec.active}">
+									<div class="pull-right hover-action" ng-click="interface.deleteSpecs(spec.skuID)"><i class="fa fa-times"></i></div>
+									<div class="block">
+										<span class="label bg-info m-r-xs" ng-repeat="attr in spec.attrs">{{attr.name}}</span>
+									</div>
+									<small class="text-muted text-ellipsis" ng-show="!!spec.skuID">{{spec.skuID}}</small>
+									<small class="text-muted text-ellipsis" ng-show="!spec.skuID">編輯新單品規格</small>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col lter footer">
+		<div class="vbox">
+			<div class="wrapper bg-light lt b-b">
+				正在編輯：
+				<span ng-show="interface.editMain">商品主檔</span>
+				<span ng-show="interface.editSpecs">單品規格 （{{interface.selectedSpecs}}）</span>
+			</div>
+			<div class="row-row">
+				<div class="cell scrollable">
+					<div class="cell-inner">
+						<form>
+							<uib-alert ng-repeat="alert in interface.alerts" type="{{alert.type}}" close="interface.closeAlert($index)" class="animated fadeIn m-n no-radius">{{alert.msg}}</uib-alert>
+							<!-- 商品主檔編輯區 -->
+							<div id="product-interface" class="wrapper" ng-show="interface.editMain">
+								<input type="hidden" name="mainSpec" ng-value="product.productID">
+								<div class="row">
+									<div class="col-md-4">
+										<div class="form-group">
+											<label>供應商</label>
+											<select class="input-sm form-control" ng-options="option.name for option in interface.supplierData" ng-model="interface.selectedSupplier" ng-if="!product.supplierID"><option value>- 請選擇 -</option></select>
+											<input type="text" placeholder="" class="form-control" ng-value="product.supplierName" ng-if="!!product.supplierID" disabled>
+										</div>
+										<div class="form-group">
+											<label>商品主標</label>
+											<input type="text" placeholder="請輸入主要標題" class="form-control" ng-model="product.mainName">
+										</div>
+										<div class="form-group">
+											<label>商品副標</label>
+											<input type="email" placeholder="請輸入商品附加標題" class="form-control" ng-model="product.secName">
+										</div>
+										<div class="form-group">
+											<label>商品介紹資源網址</label>
+											<input type="email" placeholder="供賣家參考的商品相關原始圖、說明文字等…資源網址" class="form-control" ng-model="product.dataUrl">
+										</div>
+										<div class="form-group">
+											<label>狀態</label>
+											<select class="form-control m-b" ng-options="option.name for option in interface.statusOptions track by option.status" ng-model="product"></select>
+										</div>
+										<div class="form-group">
+											<label>使用規格種類</label>
+											<ui-select multiple ng-model="interface.specs.categories.selected" on-select="interface.specsAvailableUpdate()">
+												<ui-select-match allow-clear="0" placeholder="請選擇規格種類…">{{$item.name}}</ui-select-match>
+												<ui-select-choices repeat="row in interface.specs.categories.all | propsFilter: {name: $select.search}">
+													{{row.name}}
+												</ui-select-choices>
+											</ui-select>
+										</div>
+									</div>
+									<div class="col-md-8">
+										<div class="form-group">
+											<label>商品詳情介紹</label>
+											<div text-angular ng-model="product.description"></div>
+										</div>
+									</div>
+								</div>
+								<input type="hidden" name="mainSpec">
+							</div>
+							<!-- 商品規格編輯區 -->
+							<div id="specs-interface" class="wrapper" ng-show="interface.editSpecs" ng-repeat="spec in product.specs | filter: {skuID: interface.selectedSpecs}">
+								<div class="row">
+									<div class="col-md-5">
+										<label>單品圖片</label>
+										<div class="row">
+											<div class="img-d col-md-3 hover-anchor" ng-repeat="img in spec.imgs">
+												<span class="remove text-muted hover-action" ng-click="interface.imgRemove($index)"><i class="fa fa-times"></i></span>
+												<img ng-src="{{img}}" class="img-responsive bg-light">
+											</div>
+											<div class="img-d col-md-3">
+												<a href class="add text-muted" ng-click="interface.modal('lg')">
+													<i class="fa fa-plus"></i>
+												</a>
+												<img ng-src="img/png.png" class="img-responsive bg-light">
+											</div>
+										</div>
+									</div>
+									<div class="col-md-7">
+										<div class="row">
+											<div class="form-group col-md-3">
+												<label>SKU編碼</label>
+												<input type="text" class="form-control" ng-model="spec.skuID" disabled>
+											</div>
+											<div class="form-group col-md-9">
+												<label>單品規格</label>
+												<ui-select multiple ng-model="spec.attrs" class="form-control" ng-required="true">
+													<ui-select-match placeholder="選擇規格">{{$item.name}}</ui-select-match>
+													<ui-select-choices group-by="'category'" repeat="attr in interface.specs.attributes | propsFilter:{name: $select.search}">
+													{{attr.name}}
+													</ui-select-choices>
+												</ui-select>
+											</div>
+											<div class="form-group col-md-2">
+												<label>單品庫存</label>
+												<input type="text" placeholder="請輸入您要編入的庫存量，系統沒庫存時將會停賣" class="form-control" ng-model="spec.stock" ng-required="true">
+											</div>
+											<div class="form-group col-md-2">
+												<label>單品安全庫存</label>
+												<input type="text" placeholder="若低於安全庫存，將會標註或通知您" class="form-control" ng-model="spec.safeStock" ng-required="true">
+											</div>
+											<div class="form-group col-md-2">
+												<label>單品成本</label>
+												<input type="text" placeholder="輸入成本有利於日後報表上的數據分析" class="form-control" ng-model="spec.cost" ng-required="true">
+											</div>
+											<div class="form-group col-md-2">
+												<label>單品原價</label>
+												<input type="text" placeholder="市價" class="form-control" ng-model="spec.refPrice" ng-required="true">
+											</div>
+											<div class="form-group col-md-2">
+												<label>單品售價</label>
+												<input type="text" placeholder="在此要銷售的價格" class="form-control" ng-model="spec.sellPrice" ng-required="true">
+											</div>
+											<div class="form-group col-md-2">
+												<label>賣家分潤比</label>
+												<input type="text" placeholder="若大於1將會是定額分享給賣家，若小於1，將是照每筆商品售價比例分潤" class="form-control" ng-model="spec.shareProfit" ng-required="true">
+											</div>
+											<div class="form-group col-md-2">
+												<label>目前銷量</label>
+												<input type="text" class="form-control" ng-model="spec.salesNum" readonly>
+											</div>
+											<div class="form-group col-md-4">
+												<label>建立人ID</label>
+												<input type="text" class="form-control" ng-model="spec.createrID" readonly>
+											</div>
+											<div class="form-group col-md-3">
+												<label>建立時間</label>
+												<input type="text" class="form-control" ng-model="spec.createDate" readonly>
+											</div>
+											<div class="form-group col-md-3">
+												<label>更新IP位址</label>
+												<input type="text" class="form-control" ng-model="spec.updateDate" readonly>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="app-footer wrapper-md bg-light lt b-t">
+	<button type="button" class="btn btn-primary btn-addon" ng-if="!!interface.stateParams" ng-click="interface.editorDone()"><i class="fa fa-edit"></i>更新商品</button>
+	<button type="button" class="btn btn-primary btn-addon" ng-if="!interface.stateParams" ng-click="interface.editorDone()"><i class="fa fa-plus"></i>新增商品</button>
+</div>
